@@ -1,0 +1,43 @@
+version: '2.4'
+
+services:
+  common:
+    build: .
+    volumes:
+      - .:/bowling-api
+    image: bowling-api
+
+  web:
+    extends:
+      service: common
+    depends_on:
+      - postgres
+    environment:
+      - ACTIVEMQ_HOST=activemq
+    command: rails s
+    ports:
+      - 3000:3000
+
+  test:
+    extends:
+      service: common
+    command: rails test
+    environment:
+      - SYMBOLOGY_PROJECT_ID=inbox_symbology_consumer
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:11.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
