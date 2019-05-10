@@ -5,7 +5,7 @@ class CreateRolls < ActiveRecord::Migration[5.2]
     create_table :rolls do |t|
       t.integer :points, limit: 2
       t.integer :number, limit: 1
-      t.references :frames
+      t.references :frame
     end
   end
 end
