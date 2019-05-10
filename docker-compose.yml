@@ -14,9 +14,9 @@ services:
   web:
     extends:
       service: common
+    command: rails s -b 0.0.0.0
     depends_on:
       - postgres
-    command: rails s -b 0.0.0.0
     ports:
       - 3000:3000
 
@@ -24,8 +24,6 @@ services:
     extends:
       service: common
     command: rails test
-    environment:
-      - SYMBOLOGY_PROJECT_ID=inbox_symbology_consumer
     ports:
       - 3000:3000
     depends_on:
