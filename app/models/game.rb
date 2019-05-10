@@ -2,7 +2,6 @@
 
 class Game < ApplicationRecord
   has_many :frames, dependent: :destroy
-  has_many :rolls, through: :frames
 
   validates :player_name, presence: true
 

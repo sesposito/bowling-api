@@ -9,7 +9,7 @@ class CreateFrames < ActiveRecord::Migration[5.2]
       t.boolean :spare, default: false
       t.boolean :strike, default: false
       t.boolean :ended, default: false
-      t.integer :bonuses_left, limit: 1, default: 0
+      t.integer :bonus_throws, limit: 1, default: 0
     end
   end
 end
