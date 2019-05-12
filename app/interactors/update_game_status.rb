@@ -2,30 +2,31 @@
 
 class UpdateGameStatus
   def initialize(
-    game:, bowl:,
-    current_frame: nil,
-    frame_repository: Frame,
-    throw_repository: Throw
+    game:,
+    bowl:,
+    current_frame:,
+    frame_repository: FrameRepository,
+    game_repository: GameRepository
   )
     @game = game
     @bowl = bowl
-    @current_frame = current_frame || game.current_frame
+    @current_frame = current_frame
+    @previous_throw = current_frame.throws.max_by(&:number)
     @frame_repository = frame_repository
-    @throw_repository = throw_repository
+    @game_repository = game_repository
   end
 
   def call
     frame_results = new_frame_results
-    current_frame.update!(frame_results)
-    update_bonus_throws
+    frame_repository.update!(frame: current_frame, struct: FrameRepository::DEFAULTS.merge(frame_results))
+    update_previous_frames_scores
     create_new_frame if !final_frame? && frame_results[:ended]
-    game.update!(ended: true) if final_frame? && frame_results[:ended]
-    game.reload
+    game_repository.end_game!(game: game) if final_frame? && frame_results[:ended]
   end
 
   private
 
-  attr_reader :game, :bowl, :current_frame, :frame_repository, :throw_repository
+  attr_reader :game, :bowl, :current_frame, :frame_repository, :game_repository, :previous_throw
 
   def new_frame_results
     if strike?
@@ -55,13 +56,6 @@ class UpdateGameStatus
     previous_throw.nil?
   end
 
-  def previous_throw
-    @previous_throw ||= throw_repository.find_by(
-      frame: current_frame,
-      number: bowl.number - 1
-    )
-  end
-
   def strike?
     first_throw? && bowl.points == 10
   end
@@ -70,19 +64,15 @@ class UpdateGameStatus
     !first_throw? && bowl.points + previous_throw.points == 10
   end
 
-  def update_bonus_throws
-    frame_repository
-      .where(game: game)
-      .where('bonus_throws > ?', 0)
-      .where('number < ?', current_frame.number).each do |frame|
-        frame.update!(
-          points: frame.points + bowl.points,
-          bonus_throws: frame.bonus_throws - 1
-        )
-      end
+  def update_previous_frames_scores
+    frame_repository.update_previous_frames_scores!(
+      game_id: game.id,
+      frame_number: current_frame.number,
+      points: bowl.points
+    )
   end
 
   def create_new_frame
-    frame_repository.create!(number: current_frame.number + 1, game: game)
+    frame_repository.create!(game_id: game.id, number: current_frame.number + 1)
   end
 end

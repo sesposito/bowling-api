@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateNewGame
-  def initialize(player_name:, game_repository: Game, frame_repository: Frame)
+  def initialize(player_name:, game_repository: GameRepository, frame_repository: FrameRepository)
     @player_name = player_name
     @game_repository = game_repository
     @frame_repository = frame_repository
@@ -9,7 +9,7 @@ class CreateNewGame
 
   def call
     new_game = game_repository.create!(player_name: player_name)
-    frame_repository.create!(game: new_game, number: 1)
+    frame_repository.create!(game_id: new_game.id, number: 1)
     new_game
   end
 

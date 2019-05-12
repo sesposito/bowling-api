@@ -2,8 +2,65 @@
 
 module Api
   class GamesController < ApiController
-    def show
-      render(status: 200, json: { message: :success! }.to_json)
+    include GameLookup
+
+    def index
+      games_representer = Representers::GamesRepresenter.new(games)
+      render(status: 200, json: games_representer.to_json)
     end
+
+    def show
+      game = find_game_by_id!(params[:id])
+
+      game_representer = Representers::GameRepresenter.new(game_data(game))
+      render(status: 200, json: game_representer.to_json)
+    end
+
+    def create
+      parsed_body = parse_body!
+      new_game = CreateNewGame.new(parsed_body).call
+
+      game_representer = Representers::GameRepresenter.new(game_data(new_game))
+      render(status: 201, json: game_representer.to_json)
+    end
+
+    # TODO
+    def destroy
+      game = find_game_by_id!(params[:id])
+      game.destroy!
+
+      render(status: 204)
+    end
+
+    private
+
+    def games
+      games = GameRepository.list_games
+      Games.new(games: games.map { |g| game_data(g) })
+    end
+
+    def game_data(game)
+      Game.new(
+        id: game.id,
+        player_name: game.player_name,
+        current_frame: game.current_frame.number,
+        points: game.frames.sum(&:points),
+        ended: game.ended
+      )
+    end
+
+    def parse_body!
+      body = JSON.parse(request.body.read).symbolize_keys
+
+      raise Errors::ValidationError, 'Missing "player_name" key' unless body.key?(:player_name)
+      raise Errors::ValidationError, '"player_name" cannot be empty' if body[:player_name].blank?
+
+      body
+    rescue JSON::ParserError
+      raise Errors::ValidationError, 'Invalid JSON'
+    end
+
+    Game = Struct.new(:id, :player_name, :current_frame, :points, :ended, keyword_init: true)
+    Games = Struct.new(:games, keyword_init: true)
   end
 end
