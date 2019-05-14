@@ -6,6 +6,7 @@ class CreateThrows < ActiveRecord::Migration[5.2]
       t.integer :points, limit: 2
       t.integer :number, limit: 1
       t.references :frame
+      t.references :game
     end
   end
 end

@@ -29,7 +29,7 @@ module Api
     end
 
     def frames(game_id)
-      frames = FrameRepository.list_game_frames(game_id: game_id)
+      frames = FrameRepository.list_frames(game_id: game_id)
       Frames.new(
         frames: frames.map { |f| frame_data(f) },
         total_points: frames.sum(&:points)
@@ -37,7 +37,7 @@ module Api
     end
 
     def find_frame!(game_id, frame_number)
-      frame = FrameRepository.find_game_frame(game_id: game_id, frame_number: frame_number)
+      frame = FrameRepository.find_frame(game_id: game_id, frame_number: frame_number)
       raise Errors::NotFoundError, "Frame with id: #{frame_number} not found" unless frame
 
       frame

@@ -8,8 +8,12 @@ class CreateNewGame
   end
 
   def call
-    new_game = game_repository.create!(player_name: player_name)
-    frame_repository.create!(game_id: new_game.id, number: 1)
+    new_game = nil
+    ActiveRecord::Base.transaction do
+      new_game = game_repository.create!(player_name: player_name, current_frame_number: 1)
+      frame_repository.create!(game_id: new_game.id, number: 1)
+    end
+
     new_game
   end
 

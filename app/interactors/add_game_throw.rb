@@ -5,25 +5,23 @@ class AddGameThrow
     game:,
     frame: nil,
     knocked_pins:,
-    throw_repository: ThrowsRepository,
+    throw_repository: ThrowRepository,
     update_game_interactor: UpdateGameStatus
   )
     @game = game
-    @frame = frame || game.frames.max_by(&:number)
+    @frame = frame || game.current_frame
     @knocked_pins = knocked_pins
     @update_game_interactor = update_game_interactor
     @throw_repository = throw_repository
   end
 
   def call
-    raise 'Game already ended.' if game.ended
-
     new_throw = nil
     ActiveRecord::Base.transaction do
       new_throw = create_throw
       update_game_interactor.new(
         game: game,
-        bowl: new_throw,
+        throw: new_throw,
         current_frame: frame
       ).call
     end
@@ -35,15 +33,12 @@ class AddGameThrow
 
   attr_reader :game, :frame, :knocked_pins, :update_game_interactor, :throw_repository
 
-  def first_throw?
-    frame.previous_throw.nil?
-  end
-
   def create_throw
     throw_repository.create!(
+      game: game,
       frame: frame,
       points: knocked_pins,
-      number: first_throw? ? 1 : frame.previous_throw.number + 1
+      number: frame.throws.count + 1
     )
   end
 end

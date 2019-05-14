@@ -8,7 +8,7 @@ module Api
       property :id
       property :player_name
       property :current_frame
-      property :points
+      property :total_points
       property :ended
     end
   end

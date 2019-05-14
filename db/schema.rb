@@ -29,13 +29,16 @@ ActiveRecord::Schema.define(version: 2019_05_09_173838) do
   create_table "games", force: :cascade do |t|
     t.string "player_name", null: false
     t.boolean "ended", default: false
+    t.integer "current_frame_number", null: false
   end
 
   create_table "throws", force: :cascade do |t|
     t.integer "points", limit: 2
     t.integer "number", limit: 2
     t.bigint "frame_id"
+    t.bigint "game_id"
     t.index ["frame_id"], name: "index_throws_on_frame_id"
+    t.index ["game_id"], name: "index_throws_on_game_id"
   end
 
 end

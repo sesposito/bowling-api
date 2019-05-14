@@ -23,7 +23,7 @@ module Api
 
     def create
       game = find_game_by_id!(params[:game_id])
-      frame_id = params[:frame_id].to_i
+      frame_id = (params[:frame_id] || game.current_frame_number).to_i
 
       raise Errors::ValidationError, 'Game already finished' if game.ended
       raise Errors::ValidationError, "Invalid frame: #{params[:frame_id]}" unless valid_frame?(game, frame_id)
@@ -38,7 +38,7 @@ module Api
     private
 
     def throws(game_id, frame_id)
-      frame_throws = ThrowsRepository.list_throws(game_id: game_id, frame_number: frame_id)
+      frame_throws = ThrowRepository.list_throws(game_id: game_id, frame_number: frame_id)
       Rails.logger.info(frame_throws)
       Throws.new(throws: frame_throws.map { |t| throw_data(t) })
     end
@@ -51,7 +51,7 @@ module Api
     end
 
     def find_throw!(game_id, frame_number, throw_number)
-      frame_throw = ThrowsRepository.find_frame_throw(
+      frame_throw = ThrowRepository.find_frame_throw(
         game_id: game_id,
         frame_number: frame_number,
         throw_number: throw_number
@@ -75,7 +75,7 @@ module Api
     end
 
     def valid_frame?(game, frame_id)
-      game.current_frame.number == frame_id.to_i
+      game.current_frame_number == frame_id.to_i
     end
 
     Throw = Struct.new(:number, :points, keyword_init: true)

@@ -1,20 +1,12 @@
 # frozen_string_literal: true
 
 class FrameRepository
-  DEFAULTS = {
-    points: 0,
-    spare: false,
-    strike: false,
-    ended: false,
-    bonus_throws: 0
-  }.freeze
-
   class << self
-    def list_game_frames(game_id:)
+    def list_frames(game_id:)
       Frame.eager_load(:throws).where(game_id: game_id)
     end
 
-    def find_game_frame(game_id:, frame_number:)
+    def find_frame(game_id:, frame_number:)
       Frame.find_by(game_id: game_id, number: frame_number)
     end
 
@@ -37,8 +29,8 @@ class FrameRepository
       )
     end
 
-    def update!(frame:, struct:)
-      frame.update!(struct.to_h.compact)
+    def update!(frame:, data:)
+      frame.update!(data.compact)
     end
   end
 end

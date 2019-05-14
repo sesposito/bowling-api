@@ -24,7 +24,6 @@ module Api
       render(status: 201, json: game_representer.to_json)
     end
 
-    # TODO
     def destroy
       game = find_game_by_id!(params[:id])
       game.destroy!
@@ -43,8 +42,8 @@ module Api
       Game.new(
         id: game.id,
         player_name: game.player_name,
-        current_frame: game.current_frame.number,
-        points: game.frames.sum(&:points),
+        current_frame: game.current_frame_number,
+        total_points: game.frames.sum(&:points),
         ended: game.ended
       )
     end
@@ -60,7 +59,7 @@ module Api
       raise Errors::ValidationError, 'Invalid JSON'
     end
 
-    Game = Struct.new(:id, :player_name, :current_frame, :points, :ended, keyword_init: true)
+    Game = Struct.new(:id, :player_name, :current_frame, :total_points, :ended, keyword_init: true)
     Games = Struct.new(:games, keyword_init: true)
   end
 end

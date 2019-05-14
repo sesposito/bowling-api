@@ -2,7 +2,7 @@
 
 module Api
   class ApiController < ApplicationController
-    rescue_from StandardError, with: :render_unexpected_error
+    rescue_from StandardError, with: :render_unexpected_error unless Rails.env.development?
     rescue_from Errors::NotFoundError, with: :render_not_found
     rescue_from Errors::ValidationError, with: :render_unprocessable_entity
 

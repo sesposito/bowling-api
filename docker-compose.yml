@@ -23,7 +23,10 @@ services:
   test:
     extends:
       service: common
-    command: rails test
+    command: rspec
+    environment:
+      - RAILS_ENV=test
+
     ports:
       - 3000:3000
     depends_on:
