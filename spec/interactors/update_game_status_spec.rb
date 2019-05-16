@@ -13,7 +13,7 @@ RSpec.describe UpdateGameStatus do
   let(:game_repository) { class_double('GameRepository') }
   let(:frame_status_class) { class_double('FrameStatus') }
   let(:frame_status) { instance_double('FrameStatus') }
-  let(:frame_results) { double('OpenStruct', ended: false) }
+  let(:frame_results) { { ended: false } }
 
   subject do
     described_class.new(
@@ -65,7 +65,7 @@ RSpec.describe UpdateGameStatus do
       let(:frame) { instance_double('Frame', number: 10) }
 
       context 'when the frame has ended' do
-        let(:frame_results) { double('OpenStruct', ended: true) }
+        let(:frame_results) { { ended: true } }
 
         it 'ends the game' do
           subject.call
@@ -79,7 +79,7 @@ RSpec.describe UpdateGameStatus do
       let(:frame) { instance_double('Frame', number: 3) }
 
       context 'when the frame has ended' do
-        let(:frame_results) { double('OpenStruct', ended: true) }
+        let(:frame_results) { { ended: true } }
 
         it 'creates a new frame' do
           subject.call

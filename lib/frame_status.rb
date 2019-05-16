@@ -15,7 +15,7 @@ class FrameStatus
   end
 
   def call
-    OpenStruct.new(DEFAULTS.merge(new_frame_results))
+    DEFAULTS.merge(new_frame_results)
   end
 
   private
@@ -30,9 +30,10 @@ class FrameStatus
     elsif first_throw?
       { points: throw.points, ended: false }
     elsif final_frame?
-      bonus_throws = frame.bonus_throws
-      throws_left = bonus_throws.zero? ? 0 : bonus_throws - 1
+      throws_left = frame.bonus_throws.zero? ? 0 : frame.bonus_throws - 1
       {
+        strike: frame.strike,
+        spare: frame.spare,
         points: frame.points + throw.points,
         bonus_throws: throws_left,
         ended: throws_left.zero?

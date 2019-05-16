@@ -67,7 +67,7 @@ module Api
       points = body[:knocked_pins].to_i
 
       raise Errors::ValidationError, 'Missing "knocked_pins" key' unless body.key?(:knocked_pins)
-      raise Errors::ValidationError, '"knocked_pins" must be an integer {1..10}' unless (1..10).include?(points)
+      raise Errors::ValidationError, '"knocked_pins" must be an integer {0..10}' unless (0..10).include?(points)
 
       { knocked_pins: points }
     rescue JSON::ParserError
