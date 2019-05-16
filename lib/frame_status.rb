@@ -15,7 +15,7 @@ class FrameStatus
   end
 
   def call
-    DEFAULTS.merge(new_frame_results)
+    OpenStruct.new(DEFAULTS.merge(new_frame_results))
   end
 
   private

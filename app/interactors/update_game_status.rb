@@ -14,11 +14,11 @@ class UpdateGameStatus
     @current_frame = current_frame
     @frame_repository = frame_repository
     @game_repository = game_repository
-    @frame_status = frame_status_class.new(frame: current_frame, throw: throw)
+    @frame_status = frame_status_class
   end
 
   def call
-    frame_results = frame_status.call
+    frame_results = frame_status.new(frame: current_frame, throw: throw).call
     frame_repository.update!(
       frame: current_frame,
       data: frame_results
@@ -26,9 +26,9 @@ class UpdateGameStatus
 
     update_previous_frames_scores
 
-    if final_frame? && frame_results[:ended]
+    if final_frame? && frame_results.ended
       game_repository.end_game!(game: game)
-    elsif frame_results[:ended]
+    elsif frame_results.ended
       create_new_frame
     end
   end
