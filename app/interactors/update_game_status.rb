@@ -23,11 +23,13 @@ class UpdateGameStatus
       frame: current_frame,
       data: frame_results
     )
+
     update_previous_frames_scores
-    if final_frame?
-      game_repository.end_game!(game: game) if frame_results[:ended]
-    else
-      create_new_frame if frame_results[:ended]
+
+    if final_frame? && frame_results[:ended]
+      game_repository.end_game!(game: game)
+    elsif frame_results[:ended]
+      create_new_frame
     end
   end
 

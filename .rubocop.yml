@@ -8,3 +8,10 @@ AllCops:
     - 'db/schema.rb'
     - 'spec/spec_helper.rb'
     - 'spec/rails_helper.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'Rakefile'
+    - '**/*.rake'
+    - 'spec/**/*.rb'
+    - 'test/**/*.rb'

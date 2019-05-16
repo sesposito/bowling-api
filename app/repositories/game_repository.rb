@@ -10,7 +10,7 @@ class GameRepository
       Game.find_by(id: id)
     end
 
-    def create!(player_name:, current_frame_number:)
+    def create!(player_name:)
       Game.create!(player_name: player_name, current_frame_number: 1)
     end
 

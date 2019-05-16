@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
-  subject { described_class.new(player_name: 'Peter Griffin') }
+  subject { described_class.new(player_name: 'Peter Griffin', current_frame_number: 1) }
 
   it 'is invalid if player_name is nil' do
     subject.player_name = nil
@@ -17,7 +17,7 @@ RSpec.describe Game, type: :model do
     expect(subject).to_not be_valid
   end
 
-  it 'is valid wiht the correct params' do
+  it 'is valid with the correct params' do
     expect(subject).to be_valid
   end
 end

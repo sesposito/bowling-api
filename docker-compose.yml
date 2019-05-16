@@ -23,10 +23,9 @@ services:
   test:
     extends:
       service: common
-    command: rspec
+    command: bash -c "rubocop && rspec"
     environment:
       - RAILS_ENV=test
-
     ports:
       - 3000:3000
     depends_on:
