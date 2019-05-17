@@ -6,14 +6,14 @@ module Api
 
     def index
       games_representer = Representers::GamesRepresenter.new(games)
-      render(status: 200, json: games_representer.to_json)
+      render(status: :ok, json: games_representer.to_json)
     end
 
     def show
       game = find_game_by_id!(params[:id])
 
       game_representer = Representers::GameRepresenter.new(game_data(game))
-      render(status: 200, json: game_representer.to_json)
+      render(status: :ok, json: game_representer.to_json)
     end
 
     def create
@@ -26,9 +26,9 @@ module Api
 
     def destroy
       game = find_game_by_id!(params[:id])
-      game.destroy!
+      GameRepository.destroy!(game: game)
 
-      render(status: 204)
+      render(status: :no_content)
     end
 
     private

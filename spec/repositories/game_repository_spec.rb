@@ -68,4 +68,14 @@ RSpec.describe GameRepository do
       expect(@game2.reload.ended).to be true
     end
   end
+
+  describe '.destroy!' do
+    let(:game) { @game2 }
+
+    it 'destroys the given game' do
+      subject.destroy!(game: game)
+
+      expect(Game.find_by(id: game.id)).to be_nil
+    end
+  end
 end

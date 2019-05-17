@@ -21,5 +21,9 @@ class GameRepository
     def end_game!(game:)
       game.update!(ended: true)
     end
+
+    def destroy!(game:)
+      game.destroy!
+    end
   end
 end

@@ -51,13 +51,13 @@ module Api
     end
 
     def find_throw!(game_id, frame_number, throw_number)
-      frame_throw = ThrowRepository.find_frame_throw(
+      frame_throw = ThrowRepository.find_throw(
         game_id: game_id,
         frame_number: frame_number,
         throw_number: throw_number
       )
 
-      raise Errors::NotFoundError, "Frame: #{frame_id} throw  number: #{throw_number} not found" unless frame_throw
+      raise Errors::NotFoundError, "Frame: #{frame_number} throw  number: #{throw_number} not found" unless frame_throw
 
       frame_throw
     end
