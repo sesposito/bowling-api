@@ -1,4 +1,6 @@
-# README
+# Bowling API
+
+##
 
 ## Setup
 Create the containers and the DB:
@@ -7,13 +9,13 @@ Create the containers and the DB:
 
 ## Run the tests
 
-`docker-compose run web tests`
+`docker-compose run test`
 
 ## Run the API locally
 
-Exposes the app on `localhost:3000`
-
 `docker-compose up web`
+
+Exposes the app on `localhost:3000`
 
 ## Resources
 
@@ -21,39 +23,43 @@ Exposes the app on `localhost:3000`
 * GET | DELETE `/api/games/:id`
 * GET `/api/games/:id/frames`
 * GET `/api/games/:id/frames/:id`
+* POST `/api/games/:id/throws` (for the current frame of the game)
+* GET `/api/games/:id/throws/:id`
 * GET | POST `/api/games/:id/frames/:id/throws`
 * GET `/api/games/:id/frames/:id/throws/:id`
 
 ## Examples
 
-List all games:
+### List all games:
 
 `curl localhost:3000/api/games`
 
-Create a new game:
+### Create a new game:
 
 `curl localhost:3000/api/games -H 'Content-Type: application/json' -d '{"player_name": "Awesome Player"}'`
 
-Get created game:
+### Get created game:
 
 `curl localhost:3000/api/games/1`
 
-Get a game current frames score:
+### Get a game current frames score:
 
 `curl localhost:3000/api/games/1/frames`
 
-Get a game frame's score:
+### Get a specific frame score:
 
 `curl localhost:3000/api/games/1/frames/2`
 
-Create a new throw and update the score:
+### Create a new throw and update the score:
 
-`curl localhost:3000/api/games/1/frames/1/throw -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
+`curl localhost:3000/api/games/1/frames/1/throws -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
 
-Destroy a game:
+or
+
+`curl localhost:3000/api/games/1/throws -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
+
+to create a throw in the current game frame.
+
+### Destroy a game:
 
 `curl -X DELETE localhost:3000/api/games/1`
-
-## TODO:
-
-Return current_frame after throw creation?
