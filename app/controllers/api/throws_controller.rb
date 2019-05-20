@@ -63,15 +63,16 @@ module Api
     end
 
     def parse_body!
-      body = JSON.parse(request.body.read).symbolize_keys
-      points = body[:knocked_pins].to_i
+      body = request.body.read
+      parsed_body = MultiJson.load(body, symbolize_keys: true)
+      points = parsed_body[:knocked_pins].to_i
 
-      raise Errors::ValidationError, 'Missing "knocked_pins" key' unless body.key?(:knocked_pins)
+      raise Errors::ValidationError, 'Missing "knocked_pins" key' unless parsed_body.key?(:knocked_pins)
       raise Errors::ValidationError, '"knocked_pins" must be an integer {0..10}' unless (0..10).include?(points)
 
       { knocked_pins: points }
-    rescue JSON::ParserError
-      raise Errors::ValidationError, 'Invalid JSON'
+    rescue MultiJson::ParseError
+      raise Errors::BadRequestError, 'Invalid JSON'
     end
 
     def valid_frame?(game, frame_id)

@@ -49,14 +49,15 @@ module Api
     end
 
     def parse_body!
-      body = JSON.parse(request.body.read).symbolize_keys
+      body = request.body.read
+      parsed_body = MultiJson.load(body, symbolize_keys: true)
 
-      raise Errors::ValidationError, 'Missing "player_name" key' unless body.key?(:player_name)
-      raise Errors::ValidationError, '"player_name" cannot be empty' if body[:player_name].blank?
+      raise Errors::ValidationError, 'Missing "player_name" key' unless parsed_body.key?(:player_name)
+      raise Errors::ValidationError, '"player_name" cannot be empty' if parsed_body[:player_name].blank?
 
-      body
-    rescue JSON::ParserError
-      raise Errors::ValidationError, 'Invalid JSON'
+      parsed_body
+    rescue MultiJson::ParseError
+      raise Errors::BadRequestError, 'Invalid JSON'
     end
 
     Game = Struct.new(:id, :player_name, :current_frame, :total_points, :ended, keyword_init: true)
