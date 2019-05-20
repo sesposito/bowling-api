@@ -84,5 +84,3 @@ test:
 production:
   <<: *default
   database: bowling-api_production
-  username: bowling-api
-  password: <%= ENV['BOWLING-API_DATABASE_PASSWORD'] %>

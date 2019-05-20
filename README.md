@@ -1,23 +1,37 @@
 # Bowling API
 
-##
+For the purpose of the challenge, no authentication mechanism was implemented. The app was configured only to run in dev and test mode.
+Docker configurations are in place and all the setup steps are to be run via docker-compose.
+
+## Database
+
+The used Database is Postgresql. There are three models/tables:
+
+* Games
+* Frames
+* Throws
+
+To see how the DB is modeled please refer to `db/schema.rb` and the models themselves.
 
 ## Setup
-Create the containers and the DB:
 
-`docker-compose run web rails db:setup`
+## Create the containers and the DB:
 
-## Run the tests
+`docker-compose run dev rails db:setup`
+
+## Run the tests:
 
 `docker-compose run test`
 
-## Run the API locally
+## Run the API locally in dev mode:
 
-`docker-compose up web`
+`docker-compose up dev`
 
 Exposes the app on `localhost:3000`
 
-## Resources
+## API
+
+### Resources
 
 * GET | POST `/api/games`
 * GET | DELETE `/api/games/:id`
@@ -28,38 +42,46 @@ Exposes the app on `localhost:3000`
 * GET | POST `/api/games/:id/frames/:id/throws`
 * GET `/api/games/:id/frames/:id/throws/:id`
 
+### Error handling
+
+The API should respond to all error situations correctly:
+
+* Resource not found - 404: Not Found
+* Bad syntax - 400: Bad Request
+* Invalid Parameters - 422: Unprocessable Entity
+
 ## Examples
 
 ### List all games:
 
-`curl localhost:3000/api/games`
+`curl -v localhost:3000/api/games`
 
 ### Create a new game:
 
-`curl localhost:3000/api/games -H 'Content-Type: application/json' -d '{"player_name": "Awesome Player"}'`
+`curl -v localhost:3000/api/games -H 'Content-Type: application/json' -d '{"player_name": "Awesome Player"}'`
 
 ### Get created game:
 
-`curl localhost:3000/api/games/1`
+`curl -v localhost:3000/api/games/1`
 
 ### Get a game current frames score:
 
-`curl localhost:3000/api/games/1/frames`
+`curl -v localhost:3000/api/games/1/frames`
 
 ### Get a specific frame score:
 
-`curl localhost:3000/api/games/1/frames/2`
+`curl -v localhost:3000/api/games/1/frames/2`
 
 ### Create a new throw and update the score:
 
-`curl localhost:3000/api/games/1/frames/1/throws -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
+`curl -v localhost:3000/api/games/1/frames/1/throws -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
 
 or
 
-`curl localhost:3000/api/games/1/throws -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
+`curl -v localhost:3000/api/games/1/throws -H 'Content-Type: application/json' -d '{"knocked_pins": 3}'`
 
 to create a throw in the current game frame.
 
 ### Destroy a game:
 
-`curl -X DELETE localhost:3000/api/games/1`
+`curl -v -X DELETE localhost:3000/api/games/1`
