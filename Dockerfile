@@ -1,8 +1,8 @@
-FROM ruby:2.6.1
+FROM ruby:2.7.4
 
 RUN apt-get update && \
     apt-get upgrade -qq && \
-    gem install bundler -v 2.0.1
+    gem install bundler -v 2.2.11
 
 ENV APP_HOME /bowling-api
 

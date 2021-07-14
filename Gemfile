@@ -3,14 +3,14 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.1'
+ruby '2.7.4'
 
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'multi_json'
 gem 'oj'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 5.2.5'
 gem 'representable', '~> 3.0', '>= 3.0.4'
 
 group :development, :test do
@@ -26,5 +26,3 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
-
-gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

@@ -3,10 +3,10 @@
 class AddGameThrow
   def initialize(
     game:,
-    frame: nil,
     knocked_pins:,
     throw_repository: ThrowRepository,
-    update_game_interactor: UpdateGameStatus
+    update_game_interactor: UpdateGameStatus,
+    frame: nil
   )
     @game = game
     @frame = frame || game.current_frame
